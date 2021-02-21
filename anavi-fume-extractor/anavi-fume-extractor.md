@@ -250,12 +250,12 @@ For uploading firmware to ANAVI Fume Extractor you need USB to UART module. All 
 
 3. In **Tools > Board ... > Boards manager** find and add the **ESP8266** package. Now "Generic ESP8266" should be an option in the **Tools > Boards** menu.
 
-4. In **Tools > Flash Size:** select **4M (1M SPIFFS)**
+4. In **Tools > Flash Size:** select **4M (1M SPIFFS)** 
 
 5. Go to **Sketch > Include Library > Manage Libraries...** and include the following dependencies of the default firmware for ANAVI Fume Extractor:
 
-* WiFiManager by tzapu (version 0.12.0)
-* ArduinoJson by Benoit Blanchon (version 5.11.1)
+* WiFiManager by tzapu (version 0.15.0)
+* ArduinoJson by Benoit Blanchon (version 6.11.2)
 * PubSubClient by Nick O'Leary (version 2.7.0)
 * Adafruit HTU21DF Library by Adafruit (version 1.0.1)
 * Adafruit APDS9960 Library by Adafruit (version 1.0.5)
@@ -266,14 +266,23 @@ For uploading firmware to ANAVI Fume Extractor you need USB to UART module. All 
 * Adafruit Unified Sensor by Adafruit (version 1.0.2)
 * Adafruit BMP085 Unified by Adafruit (version 1.0.0)
 
-
 *Note: Issues might be experienced if using different versions of the libraries.*
 
 ## Flashing Custom Firmware
 
 Follow the steps below to compile and flash custom firmware on ANAVI Fume Extractor from Arduino IDE:
 
-1. To flash the firmware from Arduino IDE select Tools > Generic ESP8266 Module (Flash mode: DIO, Flash frequency: 40MHz, CPU frequency: 80MHz, Flash size: 4M, Debug port: Disabled, Debug level: None, Reset method: ck, Upload speed: 115200, Port: /dev/ttyUSB0). Set the flash size to 4M (1M SPIFFS). You might need to adjust the port if your USB to serial debug cable is connected on a different port.
+1. To flash the firmware from Arduino IDE select Tools > Generic ESP8266 Module:
+    - Upload speed: 115200
+    - CPU frequency: 80MHz
+    - Flash size: 4MB  (FS:1M[..] ?
+    - Flash mode: DIO
+    - Flash frequency: 40MHz
+    - Debug port: Disabled
+    - Debug level: None
+    - Reset method: no dtr (aka ck)
+    - Port: /dev/ttyUSB0 
+Set the flash size to 4M (1M SPIFFS). You might need to adjust the port if your USB to serial debug cable is connected on a different port.
 
 2. After that press load an Arduino sketch. [A simple blinking LED example is available at GitHub](https://github.com/AnaviTechnology/anavi-examples/blob/master/anavi-light-controller/anavi-blinking-led/anavi-blinking-led.ino)
 
