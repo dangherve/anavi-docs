@@ -108,6 +108,190 @@ ANAVI TPM 2.0 is a Raspberry Pi add-on board therefore it is powered through the
 
 ANAVI TPM 2.0 is compatible with the `tpm-slb9670.dtbo` device tree binary overlay, which is [included in the official Raspberry Pi Linux kernel](https://github.com/raspberrypi/linux/blob/rpi-6.12.y/arch/arm/boot/dts/overlays/tpm-slb9670-overlay.dts), enabling seamless integration.
 
+## Encrypted Data Partition
+
+This guide walks you through setting up an encrypted data partition on Raspberry Pi OS Trixie and binding it to TPM 2.0 for automatic unlocking.
+
+### Enable SPI and TPM Kernel Support
+
+* Flash Raspberry Pi OS Trixie on a microSD card.
+
+* On first boot Raspberry Pi will automatically resize the root partiton.
+
+* From another computer shrink the root partiton and create ext4 data partition.
+
+* Boot the microSD card again on the Raspberry Pi:
+
+* Enable SPI usign `raspi-config`:
+
+```
+sudo raspi-config nonint do_spi 0
+```
+
+* Edit the boot configuration /boot/firmware/config.txt and add the following lines to the end of the file:
+
+```
+dtparam=spi=on
+dtoverlay=tpm-slb9670
+```
+
+NOTE: For example, you can modify `/boot/firmware/config.txt` with `nano` text editor:
+
+```
+sudo nano /boot/firmware/config.txt
+```
+
+* Reboott the Raspberry Pi:
+
+sudo reboot
+
+* Install TPM tools:
+
+```
+sudo apt update
+sudo apt install tpm2-tools
+```
+
+### Verify TPM 2.0 Detection
+
+* Check kernel messages:
+
+```
+dmesg | grep -i tpm
+```
+
+Expected output example:
+
+tpm_tis_spi spi0.0: 2.0 TPM (device-id 0x1B, rev-id 16)
+
+* Verify device nodes:
+
+```
+ls -l /dev/tpm*
+```
+
+Expected output:
+
+```
+crw-rw---- 1 tss root 10, 224 Feb 15 09:04 /dev/tpm0
+crw-rw---- 1 tss tss 510, 65536 Feb 15 09:04 /dev/tpmrm0
+```
+
+* Test TPM random number generation:
+
+```
+sudo tpm2_getrandom 8
+```
+
+### Install Cryptsetup
+
+Execute the following command to install command-line utilities for managing full-disk encryption:
+
+```
+sudo apt install cryptsetup systemd-cryptsetup
+```
+
+### Format the Data Partition with LUKS2
+
+* Format the partition /dev/mmcblk0p3:
+
+```
+sudo cryptsetup luksFormat /dev/mmcblk0p3 --type luks2
+```
+
+Confirm by typing `YES`.
+
+* Open the encrypted partition:
+
+```
+sudo cryptsetup open /dev/mmcblk0p3 data_crypt
+```
+
+As a result you will have: `/dev/mapper/data_crypt`
+
+* Create a filesystem:
+
+```
+sudo mkfs.ext4 /dev/mapper/data_crypt
+```
+
+* Close the encrypted partition:
+
+```
+sudo cryptsetup close data_crypt
+```
+
+### Bind the Encrypted Volume to TPM
+
+* Enroll the TPM for automatic unlocking:
+
+```
+sudo systemd-cryptenroll --tpm2-device=auto /dev/mmcblk0p3
+```
+
+*  Verify the LUKS header:
+
+```
+sudo cryptsetup luksDump /dev/mmcblk0p3
+```
+
+### Configure Automatic Mounting
+
+* Edit `/etc/crypttab` and add the following line:
+
+```
+data_crypt /dev/mmcblk0p3 - tpm2-device=auto
+```
+
+* Create a mount point:
+
+```
+sudo mkdir /data
+```
+
+* Optional: Get UUID of the device:
+
+```
+sudo blkid /dev/mmcblk0p3
+```
+* Edit `/etc/fstab` and add the following line:
+
+```
+/dev/mapper/data_crypt  /data  ext4  defaults  0  2
+```
+
+### Test Without Rebooting
+
+* Reload systemd and start the cryptsetup service:
+
+```
+sudo systemctl daemon-reload
+sudo systemctl start systemd-cryptsetup@data_crypt
+sudo mount -a
+```
+
+* Check that it is mounted:
+
+```
+ls /data
+```
+
+### Reboot Test
+
+* Reboot the system to ensure automatic unlocking:
+
+```
+sudo reboot
+```
+
+* After reboot ANAVI TPM 2.0 unlocks the partition automatically and `/data` is mounted without a password prompt
+
+* Test writing a file:
+
+```
+echo "Hello World" | sudo tee /data/hello.txt > /dev/null
+```
+
 ---
 
 # Schematics
