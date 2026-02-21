@@ -141,9 +141,11 @@ NOTE: For example, you can modify `/boot/firmware/config.txt` with `nano` text e
 sudo nano /boot/firmware/config.txt
 ```
 
-* Reboott the Raspberry Pi:
+* Reboot the Raspberry Pi:
 
+```
 sudo reboot
+``
 
 * Install TPM tools:
 
@@ -162,7 +164,9 @@ dmesg | grep -i tpm
 
 Expected output example:
 
+```
 tpm_tis_spi spi0.0: 2.0 TPM (device-id 0x1B, rev-id 16)
+```
 
 * Verify device nodes:
 
