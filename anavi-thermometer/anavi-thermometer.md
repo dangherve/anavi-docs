@@ -207,18 +207,19 @@ For uploading firmware to ANAVI Thermometer you need USB to UART module. All kit
 
 5. Go to **Sketch > Include Library > Manage Libraries...** and include the following dependencies of the default firmware for ANAVI Thermometer:
 
-* WiFiManager by tzapu (version 0.15.0)
-* ArduinoJson by Benoit Blanchon (version 6.11.2)
-* PubSubClient by Nick O'Leary (version 2.7.0)
-* Adafruit HTU21DF Library by Adafruit (version 1.0.1)
-* Adafruit APDS9960 Library by Adafruit (version 1.0.5)
-* DHT sensor library by Adafruit (version 1.3.4)
-* U8g2 by oliver (version 2.23.18)
-* OneWire (version 2.3.4)
-* DallasTemperature (version 3.8.0)
-* Adafruit Unified Sensor by Adafruit (version 1.0.2)
-* Adafruit BMP085 Unified by Adafruit (version 1.0.0)
-* NTPClient by Fabrice Weinberg (version 3.1.0)
+* [WiFiManager by tzapu](https://github.com/tzapu/WiFiManager) (version 2.0.17)
+* [ArduinoJson by Benoit Blanchon](https://arduinojson.org/) (version 7.4.3)
+* [PubSubClient by Nick O'Leary](https://pubsubclient.knolleary.net/) (version 2.8)
+* [Adafruit BusIO by Adafruit](https://github.com/adafruit/Adafruit_BusIO) (version 1.17.4)
+* [Adafruit HTU21DF Library by Adafruit](https://github.com/adafruit/Adafruit_HTU21DF_Library) (version 1.1.2)
+* [Adafruit APDS9960 Library by Adafruit](https://github.com/adafruit/Adafruit_APDS9960) (version 1.3.1)
+* [DHT sensor library by Adafruit](https://github.com/adafruit/DHT-sensor-library) (version 1.4.7)
+* [U8g2 by oliver](https://github.com/olikraus/u8g2) (version 2.36.19)
+* [OneWire](https://github.com/PaulStoffregen/OneWire) (version 2.3.8)
+* [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library) (version 4.0.6)
+* [Adafruit Unified Sensor by Adafruit](https://github.com/adafruit/Adafruit_Sensor) (version 1.1.15)
+* [Adafruit BMP085 Unified](https://github.com/adafruit/Adafruit_BMP085_Unified) (version 1.1.3)
+* [NTPClient by Fabrice Weinberg](https://github.com/arduino-libraries/NTPClient) (version 3.2.1)
 
 Please double check [the list of dependencies in the README for the sketch](https://github.com/AnaviTechnology/anavi-thermometer-sw#dependencies).
 
